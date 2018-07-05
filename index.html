@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head> 
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="moon"></div>
+
+    <div class="skyline">
+        <div class="building1-shadow"></div>
+        <div class="building1">
+
+            <div class="building-left-half"></div>
+            <div class="building-right-half"></div>
+        </div>
+    </div>
+    <div class="road">
+        <div class="road-top-half"></div>
+        <div class="road-bottom-half"></div>
+    </div>
+
+    <div class="car-container">
+        <div class="car-top1">
+            <div class="window1"></div>
+            <div class="window2"></div>
+
+        </div>
+        <div class="car-top2">
+            <div class="door">
+                <div class="door-knob"pau></div>
+            </div>
+        </div>
+        <div class="car-bottom">
+            <div class="wheel1-top"></div>
+            <div class="wheel1">
+                <div class="wheel-dot1"></div>
+                <div class="wheel-dot2"></div>
+                <div class="wheel-dot3"></div>
+                <div class="wheel-dot4"></div>
+
+            </div>
+
+            <div class="wheel2-top"></div>
+            <div class="wheel2">
+                <div class="wheel-dot1"></div>
+                <div class="wheel-dot2"></div>
+                <div class="wheel-dot3"></div>
+                <div class="wheel-dot4"></div>
+            </div>
+        </div>
+    </div>
+<script>
+	
+	function inviaSegnalazione(){
+		$.ajax({
+
+                url:"https://vila994-dev-ed.my.salesforce.com/services/oauth2/token?grant_type=password&client_id=3MVG9mIli7ewofGs.SEirZbw9_LqsIAeYW6uO2YUP_USz0qQ3BEIBeDvSa0NnjCyTU0C3f_kYRBigkkpaMO_f&client_secret=2970455179981460876&username=develop@vila994.com&password=123qwe,.-OvYGelZzaZKZTWRoW66HinlAd",
+                type: "POST",
+
+                success: function(result){
+                    var token = result.access_token;
+                    console.log("token.  " +token);
+                    var datiDaInviare = '{"DeviceId__c": "a040X00000dNQCTQA4", "Error_Message__c": "Avaria Motore"}';
+
+                    $.ajax({
+                        url:"https://vila994-dev-ed.my.salesforce.com/services/data/v43.0/sobjects/Segnalazioni_Veicolo__e",
+                        type: "POST",
+                        headers: {
+                            "Authorization": "Bearer " + token,
+                            "Content-Type": "application/json"
+                        },
+                        //dataType: "json",
+                        data: datiDaInviare,
+                        success: function(result){
+                            console.log("dati inviati");
+                            alert("Avaria Motore, case generato.");
+                        },
+                        error: function(richiesta,stato,errori){
+                            console.log("Errore");
+                        }
+                    });
+                },
+                error: function(richiesta,stato,errori){
+                    alert("Errore");
+                }
+            });
+        }
+	
+
+
+
+	$(document).ready(function(){
+		console.log("Ace");
+		setInterval(function(){
+			inviaSegnalazione();
+			
+		},20000);
+	});
+</script>
+
+</body>
+</html>
